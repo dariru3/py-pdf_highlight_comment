@@ -9,7 +9,6 @@ def comment_pdf(input_file:str
     """
     Search for a particular string value in a PDF file and add comments to it.
     """
-    BLUE_COLOR = (0,0,1)
     pdfIn = fitz.open(input_file)
     found_matches = 0
     # Iterate throughout the document pages
@@ -28,17 +27,15 @@ def comment_pdf(input_file:str
         #item will contain the coordinates of the found text
         for item in matched_values:
             # Enclose the found text with a bounding box
-            annot = page.add_rect_annot(item)
-            annot.set_border({"dashes":[2],"width":0.2})
-            annot.set_colors({"stroke":BLUE_COLOR})
+            annot = page.add_highlight_annot(item)
+            # annot.set_border({"dashes":[2],"width":0.2})
 
             # Add comment to the found match
-            info = comment_title
-            # info = annot.info
-            # info["title"]   = comment_title
-            # info["content"] = comment_info
-            #info["subject"] = "Educative subject"
-            annot.set_name(info)
+            info = annot.info
+            info["title"] = comment_title
+            info["content"] = comment_info
+            # info["subject"] = "Python Commenter"
+            annot.set_info(info)
 
             annot.update()
 
@@ -60,9 +57,9 @@ def comment_pdf(input_file:str
     print("\n".join("{}:{}".format(i, j) for i, j in summary.items()))
     print("###################################################################")
 
-comment_pdf("muji report 2021 EN.pdf"
-            , "human rights"
-            , "human rights"
-            , "人権"
-            , "muji report 2021 EN comments.pdf"
+comment_pdf(input_file="muji report 2021 EN.pdf"
+            , search_text="human rights"
+            , comment_title="Python Highlighter"
+            , comment_info="human rights = 人権"
+            , output_file="muji report 2021 EN comments.pdf"
             )
