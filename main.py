@@ -19,22 +19,21 @@ def comment_pdf(input_file:str
            if pageID not in pages:
               continue
 
-        # Use the search for function to find the text
+        # Use the search_for function to find the text
         matched_values = page.search_for(search_text,hit_max=20)
         found_matches += len(matched_values) if matched_values else 0
 
         #Loop through the matches values
         #item will contain the coordinates of the found text
         for item in matched_values:
-            # Enclose the found text with a bounding box
+            # Highlight found text
             annot = page.add_highlight_annot(item)
-            # annot.set_border({"dashes":[2],"width":0.2})
 
             # Add comment to the found match
             info = annot.info
-            info["title"] = comment_title
-            info["content"] = comment_info
-            # info["subject"] = "Python Commenter"
+            info["title"] = comment_title # author
+            info["content"] = comment_info # comment
+            # info["subject"] = "Python Commenter" # leave for now
             annot.set_info(info)
 
             annot.update()
