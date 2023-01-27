@@ -53,12 +53,19 @@ def comment_pdf(input_file:str
 
     # Print process Summary
     print("## Summary ########################################################")
-    print("\n".join("{}:{}".format(i, j) for i, j in summary.items()))
+    print("\n".join("{}: {}".format(i, j) for i, j in summary.items()))
     print("###################################################################")
 
-comment_pdf(input_file="muji report 2021 EN.pdf"
-            , search_text="human rights"
+# comment_pdf(input_file="muji report 2021 EN.pdf"
+#             , search_text="human rights"
+#             , comment_title="Python Highlighter"
+#             , comment_info="human rights = 人権"
+#             , output_file="muji report 2021 EN comments.pdf"
+#             )
+
+comment_pdf(input_file="muji report 2021 JA.pdf"
+            , search_text="人権"
             , comment_title="Python Highlighter"
             , comment_info="human rights = 人権"
-            , output_file="muji report 2021 EN comments.pdf"
+            , output_file="muji report 2021 JA comments.pdf"
             )
