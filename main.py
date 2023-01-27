@@ -20,23 +20,24 @@ def comment_pdf(input_file:str
               continue
 
         # Use the search_for function to find the text
-        matched_values = page.search_for(search_list,hit_max=20)
-        found_matches += len(matched_values) if matched_values else 0
+        for word in search_list:
+            matched_values = page.search_for(word,hit_max=20)
+            found_matches += len(matched_values) if matched_values else 0
 
-        #Loop through the matches values
-        #item will contain the coordinates of the found text
-        for item in matched_values:
-            # Highlight found text
-            annot = page.add_highlight_annot(item)
+            #Loop through the matches values
+            #item will contain the coordinates of the found text
+            for item in matched_values:
+                # Highlight found text
+                annot = page.add_highlight_annot(item)
 
-            # Add comment to the found match
-            info = annot.info
-            info["title"] = comment_title # author
-            info["content"] = comment_info # comment
-            # info["subject"] = "Python Commenter" # leave for now
-            annot.set_info(info)
+                # Add comment to the found match
+                info = annot.info
+                info["title"] = comment_title # author
+                info["content"] = comment_info # comment
+                #info["subject"] = "Python Commenter" # leave in code for now
+                annot.set_info(info)
 
-            annot.update()
+                annot.update()
 
     #Save to output file
     pdfIn.save(output_file,garbage=3,deflate=True)
@@ -59,6 +60,6 @@ def comment_pdf(input_file:str
 comment_pdf(input_file="report 2021 EN.pdf"
             , search_list=["human rights", "global", "sustainability"]
             , comment_title="Python Highlighter"
-            , comment_info="human rights = 人権"
+            , comment_info="要チェックや"
             , output_file="report 2021 EN comments.pdf"
             )
