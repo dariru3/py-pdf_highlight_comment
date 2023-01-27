@@ -1,5 +1,5 @@
 def comment_pdf(input_file:str
-              , search_text:str
+              , search_list:list
               , comment_title:str
               , comment_info:str
               , output_file:str
@@ -20,7 +20,7 @@ def comment_pdf(input_file:str
               continue
 
         # Use the search_for function to find the text
-        matched_values = page.search_for(search_text,hit_max=20)
+        matched_values = page.search_for(search_list,hit_max=20)
         found_matches += len(matched_values) if matched_values else 0
 
         #Loop through the matches values
@@ -56,16 +56,9 @@ def comment_pdf(input_file:str
     print("\n".join("{}: {}".format(i, j) for i, j in summary.items()))
     print("###################################################################")
 
-# comment_pdf(input_file="report 2021 EN.pdf"
-#             , search_text="human rights"
-#             , comment_title="Python Highlighter"
-#             , comment_info="human rights = 人権"
-#             , output_file="report 2021 EN comments.pdf"
-#             )
-
-comment_pdf(input_file="report 2021 JA.pdf"
-            , search_text="人権"
+comment_pdf(input_file="report 2021 EN.pdf"
+            , search_list=["human rights", "global", "sustainability"]
             , comment_title="Python Highlighter"
             , comment_info="human rights = 人権"
-            , output_file="report 2021 JA comments.pdf"
+            , output_file="report 2021 EN comments.pdf"
             )
