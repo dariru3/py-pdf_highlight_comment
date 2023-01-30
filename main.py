@@ -5,6 +5,11 @@ def comment_pdf(input_file:str
               , pages:list=None
               ):
     import fitz
+    colors = {
+        "red": [0.7, 0.35, 0.5],
+        "green": [0.35, 0.7, 0.5],
+        "blue": [0.35, 0.5, 0.7]
+    }
     """
     Search for a particular string value in a PDF file and add comments to it.
     """
@@ -20,7 +25,7 @@ def comment_pdf(input_file:str
 
         # Use the search_for function to find the text
         for word in search_list:
-            matched_values = page.search_for(word,hit_max=20)
+            matched_values = page.search_for(word[0],hit_max=20)
             found_matches += len(matched_values) if matched_values else 0
 
             #Loop through the matches values
@@ -28,11 +33,12 @@ def comment_pdf(input_file:str
             for item in matched_values:
                 # Highlight found text
                 annot = page.add_highlight_annot(item)
+                annot.set_colors(stroke=colors[word[2]])
 
                 # Add comment to the found match
                 info = annot.info
                 info["title"] = comment_title # author
-                info["content"] = word
+                info["content"] = word[1]
                 annot.set_info(info)
 
                 annot.update()
@@ -56,7 +62,7 @@ def comment_pdf(input_file:str
     print("###################################################################")
 
 comment_pdf(input_file="report 2021 EN.pdf"
-            , search_list=["human rights", "global", "sustainability"]
+            , search_list=[["human rights","人権","red"], ["global", "グローバル", "green"], ["sustainability", "持続可能性", "blue"]]
             , comment_title="Python Highlighter"
             , output_file="report 2021 EN comments.pdf"
             )
