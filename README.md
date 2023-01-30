@@ -10,3 +10,5 @@ Installing Python packages for VS Code on MacOS:
 https://www.mytecbits.com/internet/python/installing-python-packages
 
 PyMuPDF documentation (classes): https://pymupdf.readthedocs.io/en/latest/classes.html
+
+RGB float color values: https://antongerdelan.net/colour/
