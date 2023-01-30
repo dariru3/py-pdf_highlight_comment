@@ -1,7 +1,6 @@
 def comment_pdf(input_file:str
               , search_list:list
               , comment_title:str
-              , comment_info:str
               , output_file:str
               , pages:list=None
               ):
@@ -33,8 +32,7 @@ def comment_pdf(input_file:str
                 # Add comment to the found match
                 info = annot.info
                 info["title"] = comment_title # author
-                info["content"] = comment_info # comment
-                #info["subject"] = "Python Commenter" # leave in code for now
+                info["content"] = word
                 annot.set_info(info)
 
                 annot.update()
@@ -49,7 +47,7 @@ def comment_pdf(input_file:str
        , "Matching Instances": found_matches
        , "Output File": output_file
        , "Comment Title": comment_title
-       , "Comment Info":  comment_info
+       # , "Comment Info":  comment_info
     }
 
     # Print process Summary
@@ -60,6 +58,5 @@ def comment_pdf(input_file:str
 comment_pdf(input_file="report 2021 EN.pdf"
             , search_list=["human rights", "global", "sustainability"]
             , comment_title="Python Highlighter"
-            , comment_info="要チェックや"
             , output_file="report 2021 EN comments.pdf"
             )
