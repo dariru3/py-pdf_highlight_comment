@@ -73,7 +73,7 @@ def comment_pdf(input_file:str, list_filename_csv:str, output_file:str, pages:li
     print("\n".join("{}: {}".format(i, j) for i, j in summary.items()))
     print("###################################################################")
 
-comment_pdf(input_file="test【色校戻し】_鹿島建設様_統合報告書2022 途中.pdf"
+comment_pdf(input_file="final_test_2022.pdf "
             , list_filename_csv="Sample Glossary for Daryl.csv"
-            , output_file="test【色校戻し】_鹿島建設様_統合報告書2022 途中 comments.pdf"
+            , output_file="final_test_2022_comments.pdf"
             )
