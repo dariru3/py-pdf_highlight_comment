@@ -40,20 +40,21 @@ def comment_pdf(input_file:str, list_filename_csv:str, output_file:str, pages:li
             if(matched_values):
                 matches[word] += len(matched_values)
 
-            #Loop through the matches values
-            #item will contain the coordinates of the found text
-            for item in matched_values:
-                # Highlight found text
-                annot = page.add_highlight_annot(item)
-                annot.set_colors(stroke=colors[color])
+                #Loop through the matches values
+                #item will contain the coordinates of the found text
+                for item in matched_values:
+                    # Highlight found text
+                    annot = page.add_highlight_annot(item)
+                    if color:
+                        annot.set_colors(stroke=colors[color])
 
-                # Add comment to the found match
-                info = annot.info
-                info["title"] = comment_title
-                info["content"] = comment
-                annot.set_info(info)
+                    # Add comment to the found match
+                    info = annot.info
+                    info["title"] = comment_title
+                    info["content"] = comment
+                    annot.set_info(info)
 
-                annot.update()
+                    annot.update()
 
     #Save to output file
     pdfIn.save(output_file,garbage=3,deflate=True)
@@ -72,7 +73,7 @@ def comment_pdf(input_file:str, list_filename_csv:str, output_file:str, pages:li
     print("\n".join("{}: {}".format(i, j) for i, j in summary.items()))
     print("###################################################################")
 
-comment_pdf(input_file="report 2021 EN.pdf"
-            , list_filename_csv="scan_list.csv"
-            , output_file="report 2021 EN comments.pdf"
+comment_pdf(input_file="test【色校戻し】_鹿島建設様_統合報告書2022 途中.pdf"
+            , list_filename_csv="Sample Glossary for Daryl.csv"
+            , output_file="test【色校戻し】_鹿島建設様_統合報告書2022 途中 comments.pdf"
             )
