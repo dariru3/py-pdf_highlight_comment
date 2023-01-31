@@ -68,12 +68,11 @@ def comment_pdf(input_file:str, list_filename_csv:str, output_file:str, pages:li
        , "Comment Title": comment_title
     }
 
-    # Print process Summary
-    print("## Summary ########################################################")
-    print("\n".join("{}: {}".format(i, j) for i, j in summary.items()))
-    print("###################################################################")
+    # Export Process Summary
+    with open('summary.txt', 'w') as summary_txt:
+        summary_txt.write("\n".join("{}: {}".format(i, j) for i, j in summary.items()))
 
-comment_pdf(input_file="final_test_2022.pdf "
-            , list_filename_csv="Sample Glossary for Daryl.csv"
-            , output_file="final_test_2022_comments.pdf"
+comment_pdf(input_file="report 2021 EN.pdf"
+            , list_filename_csv="scan_list.csv"
+            , output_file="report 2021 EN comments.pdf"
             )
