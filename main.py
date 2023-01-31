@@ -63,16 +63,16 @@ def comment_pdf(input_file:str, list_filename_csv:str, output_file:str, pages:li
     #Process Summary
     summary = {
          "Input File": input_file
-       , "Matching Instances": "\n" + "\n".join("{}: {}".format(word, count) for word, count in matches.items())
-       , "Output File": output_file
-       , "Comment Title": comment_title
+        , "Output File": output_file
+        , "Comment Title": comment_title
+        , "Matching Instances": "\n" + "\n".join("{}: {}".format(word, count) for word, count in matches.items())
     }
 
     # Export Process Summary
     with open('summary.txt', 'w') as summary_txt:
         summary_txt.write("\n".join("{}: {}".format(i, j) for i, j in summary.items()))
 
-comment_pdf(input_file="report 2021 EN.pdf"
-            , list_filename_csv="scan_list.csv"
-            , output_file="report 2021 EN comments.pdf"
+comment_pdf(input_file="final_test_2022.pdf"
+            , list_filename_csv="Sample Glossary for Daryl.csv"
+            , output_file="final_test_2022 comments.pdf"
             )
