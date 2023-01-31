@@ -1,5 +1,5 @@
-def comment_pdf(input_file:str, search_list:list, output_file:str, pages:list=None):
-    import fitz
+def comment_pdf(input_file:str, list_filename_csv:str, output_file:str, pages:list=None):
+    import fitz, csv
     comment_title = "Python Highlighter"
     colors = {
         "red": [0.7, 0.35, 0.5],
@@ -9,6 +9,11 @@ def comment_pdf(input_file:str, search_list:list, output_file:str, pages:list=No
     """
     Search for a particular string value in a PDF file and add comments to it.
     """
+    with open(list_filename_csv, 'r') as csv_data:
+        csv_reader = csv.reader(csv_data)
+        header = next(csv_reader) # skips the first row
+        search_list = [row for row in csv_reader]
+
     pdfIn = fitz.open(input_file)
     
     # create matches dictionary for output summary
@@ -68,6 +73,6 @@ def comment_pdf(input_file:str, search_list:list, output_file:str, pages:list=No
     print("###################################################################")
 
 comment_pdf(input_file="report 2021 EN.pdf"
-            , search_list=[["human rights","人権","red"], ["global", "グローバル", "green"], ["sustainability", "持続可能性", "blue"]]
+            , list_filename_csv="scan_list.csv"
             , output_file="report 2021 EN comments.pdf"
             )

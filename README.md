@@ -2,6 +2,9 @@
 ## Objective
 Add comments on specific keywords in a PDF
 
+## How-to
+Save CSV in Unicode (UTF-8) in order to preserve Japanese font
+
 ## Resources
 Sample code:
 https://www.educative.io/courses/pdf-management-python/B8pGNP0loDQ
