@@ -17,45 +17,34 @@ def comment_pdf(input_file:str, list_filename_csv:str, output_file:str, pages:li
     pdfIn = fitz.open(input_file)
     
     # create matches dictionary for output summary
-    matches = {}
-    for search in search_list:
-        matches[search[0]] = 0
+    matches_record = {search[0]: 0 for search in search_list}
     
     # Iterate throughout the document pages
     for pg,page in enumerate(pdfIn):
         pageID = pg+1
         # If required for specific pages
-        if pages:
-           if pageID not in pages:
-              continue
+        if pages and pageID not in pages:
+            continue
 
         # Use the search_for function to find the text
-        for search in search_list:
-            word = search[0]
-            comment = search[1]
-            color = search[2]
-
+        for search_settings in search_list:
+            word, comment, color = search_settings
             matched_values = page.search_for(word,hit_max=20)
-            # found_matches += len(matched_values) if matched_values else 0
-            if(matched_values):
-                matches[word] += len(matched_values)
-
-                #Loop through the matches values
-                #item will contain the coordinates of the found text
+            if matched_values:
+                matches_record[word] += len(matched_values)
+                #Loop through the matched values; item will contain the coordinates of the found text
                 for item in matched_values:
                     # Highlight found text
                     annot = page.add_highlight_annot(item)
                     if color:
                         annot.set_colors(stroke=colors[color])
-
                     # Add comment to the found match
                     info = annot.info
                     info["title"] = comment_title
                     info["content"] = comment
                     annot.set_info(info)
-
                     annot.update()
-
+    
     #Save to output file
     pdfIn.save(output_file,garbage=3,deflate=True)
     pdfIn.close()
@@ -63,7 +52,7 @@ def comment_pdf(input_file:str, list_filename_csv:str, output_file:str, pages:li
     #Process Summary
     summary = {
          "Input File": input_file
-       , "Matching Instances": "\n" + "\n".join("{}: {}".format(word, count) for word, count in matches.items())
+       , "Matching Instances": "\n" + "\n".join("{}: {}".format(word, count) for word, count in matches_record.items())
        , "Output File": output_file
        , "Comment Title": comment_title
     }
