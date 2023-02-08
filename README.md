@@ -6,12 +6,17 @@ Add comments on specific keywords in a PDF
 Save CSV in Unicode (UTF-8) in order to preserve Japanese font
 
 ## Resources
-Sample code:
+Sample code (outdated):
 https://www.educative.io/courses/pdf-management-python/B8pGNP0loDQ
 
 Installing Python packages for VS Code on MacOS: 
 https://www.mytecbits.com/internet/python/installing-python-packages
 
-PyMuPDF documentation (classes): https://pymupdf.readthedocs.io/en/latest/classes.html
+PyMuPDF documentation (classes): 
+https://pymupdf.readthedocs.io/en/latest/classes.html
 
-RGB float color values: https://antongerdelan.net/colour/
+RGB float color values: 
+https://antongerdelan.net/colour/
+
+Google Colab (virtual Python environment): 
+https://colab.research.google.com/
