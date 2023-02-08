@@ -2,41 +2,25 @@ def comment_pdf(input_file:str, list_filename_csv:str, pages:list=None):
     import fitz
 
     comment_title = "Python Highlighter"
-    colors = {
-        "red": [0.7, 0.35, 0.5],
-        "green": [0.35, 0.7, 0.5],
-        "blue": [0.35, 0.5, 0.7]
-    }
     search_list = read_csv(list_filename_csv)
     # create matches dictionary for output summary
     matches_record = {search[0]: 0 for search in search_list}
-
+    # open pdf
     pdfIn = fitz.open(input_file)
-    # Iterate throughout the document pages
+    # Iterate throughout pdf pages
     for pg,page in enumerate(pdfIn):
         pageID = pg+1
-        # If required for specific pages
+        # If required to look in specific pages
         if pages and pageID not in pages:
             continue
-
-        # Use the search_for function to find the text
+        # Use the search_for function to find text
         for search_settings in search_list:
             word, comment, color = search_settings
             matched_values = page.search_for(word,hit_max=20)
             if matched_values:
+                # Update matches_record
                 matches_record[word] += len(matched_values)
-                #Loop through the matched values; item will contain the coordinates of the found text
-                for item in matched_values:
-                    # Highlight found text
-                    annot = page.add_highlight_annot(item)
-                    if color:
-                        annot.set_colors(stroke=colors[color])
-                    # Add comment to the found match
-                    info = annot.info
-                    info["title"] = comment_title
-                    info["content"] = comment
-                    annot.set_info(info)
-                    annot.update()
+                highlight_text(matched_values, page, color, comment_title, comment)
     
     # Save to output file
     output_file = input_file.split(".")[0] + " comments.pdf"
@@ -45,13 +29,31 @@ def comment_pdf(input_file:str, list_filename_csv:str, pages:list=None):
     
     create_summary(input_file, output_file, comment_title, matches_record)
 
-def read_csv(csv_filename):
+def read_csv(list_filename_csv):
     import csv
-    with open(csv_filename, 'r') as csv_data:
+    with open(list_filename_csv, 'r') as csv_data:
         csv_reader = csv.reader(csv_data)
         header = next(csv_reader) # skips the first row
         search_list = [row for row in csv_reader]
     return search_list
+
+def highlight_text(matched_values, page, color, comment_title, comment):
+    colors = {
+        "red": [0.7, 0.35, 0.5],
+        "green": [0.35, 0.7, 0.5],
+        "blue": [0.35, 0.5, 0.7]
+    }
+    for item in matched_values:
+        # Highlight found text
+        annot = page.add_highlight_annot(item)
+        if color:
+            annot.set_colors(stroke=colors[color])
+        # Add comment to the found match
+        info = annot.info
+        info["title"] = comment_title
+        info["content"] = comment
+        annot.set_info(info)
+        annot.update()
 
 def create_summary(input_file, output_file, comment_title, matches_record):
     summary = {
