@@ -1,4 +1,6 @@
-#!/Users/daryl-villalobos/Github_local/py-comment_pdf/env/bin/python3
+#!/bin/sh
+'''exec' "/Users/darylvillalobos/Github local/py-pdf_highlight_comment/env/bin/python3" "$0" "$@"
+' '''
 # -*- coding: utf-8 -*-
 import re
 import sys

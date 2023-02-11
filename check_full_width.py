@@ -51,4 +51,4 @@ def check_full_width(input_file:str, pages:list=None):
     pdfIn.save(output_file,garbage=3,deflate=True)
     pdfIn.close()
 
-check_full_width(input_file="full_width.pdf")
+check_full_width(input_file="Test Full Width.pdf")
