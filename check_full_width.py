@@ -27,9 +27,9 @@ def check_full_width(input_file:str, pages:list=None):
             if status in full_status:
                 full_width_chars.add(char)
                 if char in results_summary:
-                    results_summary[char] += 1
+                    results_summary[char][0] += 1
                 else:
-                    results_summary[char] = 1
+                    results_summary[char] = [1, status]
 
         # Get the positions of full-width characters in the page
         full_width_positions = []
