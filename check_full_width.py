@@ -1,5 +1,4 @@
-import fitz
-import unicodedata
+import fitz, unicodedata
 
 def check_full_width(input_file:str, pages:list=None):
     comment_title = "Full-Width Highlighter"
