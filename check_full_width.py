@@ -26,24 +26,26 @@ def check_full_width(input_file:str, pages:list=None):
             full_status = ['W', 'F', 'A']
             if status in full_status:
                 full_width_chars.add(char)
+                # Update summary
                 if char in results_summary:
-                    results_summary[char] += 1
+                    results_summary[char][0] += 1
                 else:
-                    results_summary[char] = 1
+                    results_summary[char] = [1, status]
 
         # Get the positions of full-width characters in the page
-        full_width_positions = []
         for char in full_width_chars:
-            start_idx = text.find(char)
-            end_idx = start_idx + len(char)
-            full_width_positions.append((start_idx, end_idx))
-
-        # Highlight the full-width characters
-        for start, end in full_width_positions:
-            matches = page.search_for(text[start:end], hit_max=1)
-            if matches:
-                annot = page.add_highlight_annot(matches[0])
-                annot.update()
+            start_idx = 0
+            while True:
+                start_idx = text.find(char, start_idx)
+                if start_idx == -1:
+                    break
+                end_idx = start_idx + len(char)
+                matches = page.search_for(text[start_idx:end_idx])
+                if matches:
+                    for match in matches:
+                        annot = page.add_highlight_annot(match)
+                        annot.update()
+                start_idx += 1
 
     print(results_summary)
 
