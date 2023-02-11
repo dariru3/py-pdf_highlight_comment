@@ -15,23 +15,23 @@ def check_full_width(input_file:str, pages:list=None):
         if pages and pageID not in pages:
               continue
 
-        # Get all the text in the page
+        # Get all the text on the page
         text = page.get_text("text")
 
-        # Split the text by characters and check if each character is full-width
+        # Check if each character is full-width
         full_width_chars = set()
         for char in text:
-            status = unicodedata.east_asian_width(char)
+            char_status = unicodedata.east_asian_width(char)
             full_status = ['W', 'F', 'A']
-            if status in full_status:
+            if char_status in full_status:
                 full_width_chars.add(char)
                 # Update summary
                 if char in results_summary:
                     results_summary[char][0] += 1
                 else:
-                    results_summary[char] = [1, status]
+                    results_summary[char] = [1, char_status]
 
-        # Get the positions of full-width characters in the page
+        # Search for every instance of the full-width character on the page and highlight
         for char in full_width_chars:
             start_idx = 0
             while True:
@@ -46,7 +46,15 @@ def check_full_width(input_file:str, pages:list=None):
                         annot.update()
                 start_idx += 1
 
-    print(results_summary)
+    print('Character: count (type)')
+    for character, (count, type) in results_summary.items():
+        status_dic = {
+            'W': 'Wide',
+            'F': 'Fullwidth',
+            'A': 'Ambiguous'
+        }
+        status_name = status_dic[type]
+        print(f'{character}: {count} ({status_name})')
 
     # Save to output file
     pdfIn.save(output_file,garbage=3,deflate=True)
