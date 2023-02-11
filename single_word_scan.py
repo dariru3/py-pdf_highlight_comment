@@ -1,5 +1,6 @@
+import fitz
+
 def comment_pdf(input_file:str, search_text:str, comment_info:str, pages:list=None):
-    import fitz
     comment_title = "Python Highlighter"
     found_matches = 0
     pdfIn = fitz.open(input_file)

@@ -1,6 +1,6 @@
-def comment_pdf(input_file:str, list_filename_csv:str, pages:list=None):
-    import fitz
+import fitz, csv
 
+def comment_pdf(input_file:str, list_filename_csv:str, pages:list=None):
     comment_title = "Python Highlighter"
     search_list = read_csv(list_filename_csv)
     # create matches dictionary for output summary
@@ -30,7 +30,6 @@ def comment_pdf(input_file:str, list_filename_csv:str, pages:list=None):
     create_summary(input_file, output_file, comment_title, matches_record)
 
 def read_csv(list_filename_csv):
-    import csv
     with open(list_filename_csv, 'r') as csv_data:
         csv_reader = csv.reader(csv_data)
         header = next(csv_reader) # skips the first row
@@ -66,5 +65,4 @@ def create_summary(input_file, output_file, comment_title, matches_record):
     with open('summary.txt', 'w') as summary_txt:
         summary_txt.write("\n".join("{}: {}".format(i, j) for i, j in summary.items()))
     
-
 comment_pdf(input_file="report 2021 EN.pdf", list_filename_csv="scan_list.csv")
