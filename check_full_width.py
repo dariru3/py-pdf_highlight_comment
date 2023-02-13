@@ -18,8 +18,8 @@ def check_full_width(input_file:str, pages:list=None):
         # Get all the text on the page
         text = page.get_text("text")
 
-        # Check if each character is full-width
-        full_width_chars = set()
+        # Split the text by characters and check if each character is full-width
+
         for char in text:
             char_status = unicodedata.east_asian_width(char)
             full_status = ['W', 'F', 'A']
@@ -44,7 +44,11 @@ def check_full_width(input_file:str, pages:list=None):
                     for match in matches:
                         annot = page.add_highlight_annot(match)
                         annot.update()
-                start_idx += 1
+                # Update summary
+                if char in results_summary:
+                    results_summary[char][0] += 1
+                else:
+                    results_summary[char] = [1, status]
 
     print('Character: count (type)')
     for character, (count, type) in results_summary.items():
