@@ -16,7 +16,7 @@ def comment_pdf(input_file:str, list_filename_csv:str, pages:list=None):
         # Use the search_for function to find text
         for search_settings in search_list:
             word, comment, color = search_settings
-            matched_values = page.search_for(word,hit_max=20)
+            matched_values = page.search_for(word)
             if matched_values:
                 # Update matches_record
                 matches_record[word] += len(matched_values)
