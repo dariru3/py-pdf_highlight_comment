@@ -52,7 +52,7 @@ def highlight_text(matched_values, page, color, comment_title, comment):
         info["title"] = comment_title
         info["content"] = comment
         annot.set_info(info)
-        annot.update()
+        annot.update(opacity=0.4)
 
 def create_summary(input_file, output_file, comment_title, matches_record):
     summary = {
@@ -65,4 +65,4 @@ def create_summary(input_file, output_file, comment_title, matches_record):
     with open('summary.txt', 'w') as summary_txt:
         summary_txt.write("\n".join("{}: {}".format(i, j) for i, j in summary.items()))
     
-comment_pdf(input_file="report 2021 EN.pdf", list_filename_csv="scan_list.csv")
+comment_pdf(input_file="./test_files/final_test_2022.pdf", list_filename_csv="./test_files/sample_glossary.csv")
