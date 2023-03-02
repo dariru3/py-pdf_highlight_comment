@@ -1,7 +1,7 @@
 import fitz, csv
 
 def comment_pdf(input_file:str, list_filename_csv:str, pages:list=None):
-    comment_title = "Python Highlighter"
+    comment_title = "LCI-QA"
     search_list = read_csv(list_filename_csv)
     # create matches dictionary for output summary
     matches_record = {search[0]: 0 for search in search_list}
