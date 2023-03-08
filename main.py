@@ -38,18 +38,27 @@ def read_csv(list_filename_csv):
 
 def highlight_text(matched_values, page, color, comment_title, comment):
     colors = {
-        "red": [0.7, 0.35, 0.5],
-        "green": [0.35, 0.7, 0.5],
-        "blue": [0.35, 0.5, 0.7],
-        "orange": [1, .44, .01],
-        "light orange": [1, .75, .62],
-        "dark yellow": [1, .82, 0]
+        'blue': [0, 0, 1],
+        'light blue': [.22, .9, 1],
+        'green': [.42, .85, .16],
+        'light green': [.77, .98, .45],
+        'yellow': [1, .82, 0],
+        'light yellow': [.99, .96, .52],
+        'orange': [1, .44, .01],
+        'light orange': [1, .75, .62],
+        'red': [.90, .13, .22],
+        'light red': [1, .50, .62],
+        'pink': [.64, .19, .53],
+        'light pink': [.98, .53, 1]
     }
+
     for item in matched_values:
         # Highlight found text
         annot = page.add_highlight_annot(item)
         if color:
-            annot.set_colors(stroke=colors[color])
+            color = color.lower()
+            if color in colors:
+                annot.set_colors(stroke=colors[color])
         # Add comment to the found match
         info = annot.info
         info["title"] = comment_title
