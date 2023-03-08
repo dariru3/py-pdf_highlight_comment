@@ -77,4 +77,4 @@ def create_summary(input_file, output_file, comment_title, matches_record):
     with open('summary.txt', 'w') as summary_txt:
         summary_txt.write("\n".join("{}: {}".format(i, j) for i, j in summary.items()))
     
-comment_pdf(input_file="(English) LM Kaitai Shinsho2021.pdf", list_filename_csv="LM Kaitai Shinsho EN-JP 2023.csv")
+comment_pdf(input_file="test.pdf", list_filename_csv="test.csv")
