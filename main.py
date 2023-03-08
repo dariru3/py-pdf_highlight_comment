@@ -33,20 +33,32 @@ def read_csv(list_filename_csv):
     with open(list_filename_csv, 'r') as csv_data:
         csv_reader = csv.reader(csv_data)
         header = next(csv_reader) # skips the first row
-        search_list = [row for row in csv_reader]
+        search_list = [[row[0], row[1], row[2]] for row in csv_reader]
     return search_list
 
 def highlight_text(matched_values, page, color, comment_title, comment):
     colors = {
-        "red": [0.7, 0.35, 0.5],
-        "green": [0.35, 0.7, 0.5],
-        "blue": [0.35, 0.5, 0.7]
+        'blue': [0, 0, 1],
+        'light blue': [.22, .9, 1],
+        'green': [.42, .85, .16],
+        'light green': [.77, .98, .45],
+        'yellow': [1, .82, 0],
+        'light yellow': [.99, .96, .52],
+        'orange': [1, .44, .01],
+        'light orange': [1, .75, .62],
+        'red': [.90, .13, .22],
+        'light red': [1, .50, .62],
+        'pink': [.64, .19, .53],
+        'light pink': [.98, .53, 1]
     }
+
     for item in matched_values:
         # Highlight found text
         annot = page.add_highlight_annot(item)
         if color:
-            annot.set_colors(stroke=colors[color])
+            color = color.lower()
+            if color in colors:
+                annot.set_colors(stroke=colors[color])
         # Add comment to the found match
         info = annot.info
         info["title"] = comment_title
@@ -65,4 +77,4 @@ def create_summary(input_file, output_file, comment_title, matches_record):
     with open('summary.txt', 'w') as summary_txt:
         summary_txt.write("\n".join("{}: {}".format(i, j) for i, j in summary.items()))
     
-comment_pdf(input_file="./test_files/final_test_2022.pdf", list_filename_csv="./test_files/sample_glossary.csv")
+comment_pdf(input_file="test.pdf", list_filename_csv="test.csv")
