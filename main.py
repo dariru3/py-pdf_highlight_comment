@@ -1,7 +1,6 @@
-import fitz, csv, sys
-
 def comment_pdf(input_file:str, list_filename_csv:str, pages:list=None):
-    comment_title = "LCI-QA"
+    import fitz, sys
+    comment_name = "LCI-QA"
     search_list = read_csv(list_filename_csv)
     # create matches dictionary for output summary
     matches_record = {search[0]: 0 for search in search_list}
@@ -10,6 +9,8 @@ def comment_pdf(input_file:str, list_filename_csv:str, pages:list=None):
     # Iterate throughout pdf pages
     for pg,page in enumerate(pdfIn):
         pageID = pg+1
+        sys.stdout.write(f"\rScanning page {pageID}...")
+        sys.stdout.flush()
         # If required to look in specific pages
         if pages and pageID not in pages:
             continue
@@ -20,16 +21,18 @@ def comment_pdf(input_file:str, list_filename_csv:str, pages:list=None):
             if matched_values:
                 # Update matches_record
                 matches_record[word] += len(matched_values)
-                highlight_text(matched_values, page, color, comment_title, comment)
+                highlight_text(matched_values, page, color, comment_name, comment)
+    sys.stdout.write("Done!")
     
     # Save to output file
     output_file = input_file.split(".")[0] + " comments.pdf"
     pdfIn.save(output_file,garbage=3,deflate=True)
     pdfIn.close()
     
-    create_summary(input_file, output_file, comment_title, matches_record)
+    create_summary(input_file, output_file, comment_name, matches_record)
 
 def read_csv(list_filename_csv):
+    import csv
     with open(list_filename_csv, 'r') as csv_data:
         csv_reader = csv.reader(csv_data)
         header = next(csv_reader) # skips the first row
