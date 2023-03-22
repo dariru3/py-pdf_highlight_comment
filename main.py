@@ -1,4 +1,4 @@
-import fitz, csv
+import fitz, csv, sys
 
 def comment_pdf(input_file:str, list_filename_csv:str, pages:list=None):
     comment_title = "LCI-QA"
