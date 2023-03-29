@@ -1,5 +1,8 @@
+import fitz, sys
+import csv
+import config
+
 def comment_pdf(input_file:str, list_filename_csv:str, pages:list=None):
-    import fitz, sys
     comment_name = "LCI-QA"
     search_list = read_csv(list_filename_csv)
     # create matches dictionary for output summary
@@ -32,7 +35,6 @@ def comment_pdf(input_file:str, list_filename_csv:str, pages:list=None):
     create_summary(input_file, output_file, comment_name, matches_record)
 
 def read_csv(list_filename_csv):
-    import csv
     with open(list_filename_csv, 'r') as csv_data:
         csv_reader = csv.reader(csv_data)
         header = next(csv_reader) # skips the first row
@@ -80,4 +82,4 @@ def create_summary(input_file, output_file, comment_title, matches_record):
     with open('summary.txt', 'w') as summary_txt:
         summary_txt.write("\n".join("{}: {}".format(i, j) for i, j in summary.items()))
     
-comment_pdf(input_file="test.pdf", list_filename_csv="test.csv")
+comment_pdf(input_file=config.config["source file"], list_filename_csv=config.config["keywords list"])
