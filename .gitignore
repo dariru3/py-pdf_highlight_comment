@@ -5,4 +5,4 @@ summary.txt
 test_files/
 config.py
 env/
-.DS_Store/
+.DS_Store
