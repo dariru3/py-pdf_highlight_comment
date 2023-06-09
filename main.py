@@ -1,4 +1,5 @@
-import fitz, sys
+import fitz
+import sys
 import csv
 from config import config
 
@@ -6,32 +7,33 @@ def comment_pdf(input_file:str, list_filename_csv:str, pages:list=None):
     comment_name = "LCI-QA"
     search_list = read_csv(list_filename_csv)
     # create matches dictionary for output summary
-    matches_record = {search[0]: 0 for search in search_list}
+    matches_record = create_matches_record(search_list)
+
     # open pdf
     pdfIn = fitz.open(input_file)
     # Iterate throughout pdf pages
     for pg,page in enumerate(pdfIn):
         pageID = pg+1
+        # UX
         sys.stdout.write(f"\rScanning page {pageID}...")
         sys.stdout.flush()
+
         # If required to look in specific pages
         if pages and pageID not in pages:
             continue
+
         # Use the search_for function to find text
         for search_settings in search_list:
             word, comment, color = search_settings
             matched_values = page.search_for(word)
             if matched_values:
-                # Update matches_record
-                matches_record[word] += len(matched_values)
+                update_matches_record(matches_record, word, matched_values)
                 highlight_text(matched_values, page, color, comment_name, comment)
+    # UX
     sys.stdout.write("Done!")
     
-    # Save to output file
-    output_file = input_file.split(".")[0] + " comments.pdf"
-    pdfIn.save(output_file,garbage=3,deflate=True)
-    pdfIn.close()
-    
+    # Save to output files
+    output_file = create_output_file(input_file, pdfIn)
     create_summary(input_file, output_file, comment_name, matches_record)
 
 def read_csv(list_filename_csv):
@@ -40,6 +42,12 @@ def read_csv(list_filename_csv):
         header = next(csv_reader) # skips the first row
         search_list = [[row[0], row[1], row[2]] for row in csv_reader]
     return search_list
+
+def create_matches_record(search_list):
+   return {search[0]: 0 for search in search_list}
+
+def update_matches_record(matches_record, word, match_values):
+   matches_record[word] += len(match_values)
 
 def highlight_text(matched_values, page, color, comment_title, comment):
     colors = {
@@ -61,8 +69,7 @@ def highlight_text(matched_values, page, color, comment_title, comment):
         # Highlight found text
         annot = page.add_highlight_annot(item)
         if color:
-            color = color.lower()
-            if color in colors:
+            if color.lower() in colors:
                 annot.set_colors(stroke=colors[color])
         # Add comment to the found match
         info = annot.info
@@ -70,6 +77,12 @@ def highlight_text(matched_values, page, color, comment_title, comment):
         info["content"] = comment
         annot.set_info(info)
         annot.update(opacity=0.4)
+
+def create_output_file(input_file, pdfIn):
+  output_file = input_file.split(".")[0] + " comments.pdf"
+  pdfIn.save(output_file,garbage=3,deflate=True)
+  pdfIn.close()
+  return output_file
 
 def create_summary(input_file, output_file, comment_title, matches_record):
     summary = {
