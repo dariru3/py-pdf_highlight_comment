@@ -81,5 +81,6 @@ def create_summary(input_file, output_file, comment_title, matches_record):
     # Export Process Summary
     with open('summary.txt', 'w') as summary_txt:
         summary_txt.write("\n".join("{}: {}".format(i, j) for i, j in summary.items()))
-    
-comment_pdf(input_file=config["source file"], list_filename_csv=config["keywords list"])
+
+if __name__ == '__main__':
+    comment_pdf(input_file=config["source file"], list_filename_csv=config["keywords list"])
