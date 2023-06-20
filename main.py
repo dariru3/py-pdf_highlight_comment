@@ -92,7 +92,7 @@ def create_summary(input_file, output_file, comment_title, matches_record):
        , "Matching Instances": "\n" + "\n".join("{}: {}".format(word, count) for word, count in matches_record.items())
     }
     # Export Process Summary
-    with open('summary.txt', 'w') as summary_txt:
+    with open('test_files/summary.txt', 'w') as summary_txt:
         summary_txt.write("\n".join("{}: {}".format(i, j) for i, j in summary.items()))
 
 if __name__ == '__main__':
