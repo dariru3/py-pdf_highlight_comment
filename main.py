@@ -28,6 +28,7 @@ def comment_pdf(input_file:str, list_filename_csv:str, pages:list=None):
             matched_values = page.search_for(word)
             if matched_values:
                 update_matches_record(matches_record, word, matched_values)
+                print("color:", color)
                 highlight_text(matched_values, page, color, comment_name, comment)
     # UX
     sys.stdout.write("Done!")
@@ -68,6 +69,7 @@ def highlight_text(matched_values, page, color, comment_title, comment):
     for item in matched_values:
         # Highlight found text
         annot = page.add_highlight_annot(item)
+        print("Stroke:", colors[color])
         if color:
             if color.lower() in colors:
                 annot.set_colors(stroke=colors[color])
