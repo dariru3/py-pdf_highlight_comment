@@ -69,7 +69,7 @@ def highlight_text(matched_values, page, color, comment_title, comment):
     for item in matched_values:
         # Highlight found text
         annot = page.add_highlight_annot(item)
-        print("Stroke:", colors[color])
+        # print("Stroke:", colors[color])
         if color:
             if color.lower() in colors:
                 annot.set_colors(stroke=colors[color])
