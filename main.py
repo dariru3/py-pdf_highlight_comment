@@ -4,7 +4,7 @@ import csv
 from config import config
 
 def comment_pdf(input_file:str, list_filename_csv:str, pages:list=None):
-    comment_name = "LCI-QA"
+    comment_name = "Highlighter"
     search_list = read_csv(list_filename_csv)
     # create matches dictionary for output summary
     matches_record = create_matches_record(search_list)
@@ -81,7 +81,7 @@ def highlight_text(matched_values, page, color, comment_title, comment):
         annot.update(opacity=0.4)
 
 def create_output_file(input_file, pdfIn):
-  output_file = input_file.split(".")[0] + " comments.pdf"
+  output_file = input_file.split(".")[0] + " Highlighter.pdf"
   pdfIn.save(output_file,garbage=3,deflate=True)
   pdfIn.close()
   return output_file
