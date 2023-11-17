@@ -2,6 +2,7 @@ import fitz
 import sys
 import csv
 import os
+import shelve
 from config import config
 
 def comment_pdf(input_folder:str, list_filename_csv:str, pages:list=None, highlight_output: bool=True):
@@ -10,6 +11,9 @@ def comment_pdf(input_folder:str, list_filename_csv:str, pages:list=None, highli
     
     for input_file in os.listdir(input_folder):
         if input_file.endswith(".pdf"):
+            if is_file_scanned(input_file):
+                print(f'Already scanned: {input_file}')
+                continue
             full_path = os.path.join(input_folder, input_file)
             matches_record = create_matches_record(search_list)
             try:
@@ -46,7 +50,8 @@ def comment_pdf(input_folder:str, list_filename_csv:str, pages:list=None, highli
             else:
                 pdfIn.close()
             
-            create_summary(full_path, output_file, comment_name, matches_record)
+            create_summary(input_file, output_file, comment_name, matches_record)
+            log_scanned_file(input_file)
             print(f"Scan complete: {input_file}")
 
 def read_csv(list_filename_csv):
@@ -115,9 +120,19 @@ def create_summary(input_file, output_file, comment_title, matches_record):
         summary_txt.write("\n".join("{}: {}".format(i, j) for i, j in summary.items()))
         summary_txt.write("\n\n")
 
+def log_scanned_file(filename: str):
+    with shelve.open('input_folder/scanned_files') as db:
+        db[filename] = True
+
+def is_file_scanned(file_name: str) -> bool:
+    with shelve.open('input_folder/scanned_files') as db:
+        return file_name in db
+
 def log_error(error_message: str):
     with open('input_folder/error_log.txt', 'a') as log_file:
         log_file.write(error_message + "\n")
 
 if __name__ == '__main__':
+    with shelve.open('input_folder/scanned_files') as db:
+        pass
     comment_pdf(input_folder=config["source_folder"], list_filename_csv=config["keywords_list"], highlight_output=False)
