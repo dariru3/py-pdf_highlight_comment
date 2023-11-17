@@ -35,8 +35,8 @@ def comment_pdf(input_folder:str, list_filename_csv:str, pages:list=None):
             sys.stdout.write("Done!")
             
             # Save to output files
-            output_file = create_output_file(input_file, pdfIn)
-            create_summary(input_file, output_file, comment_name, matches_record)
+            output_file = create_output_file(full_path, pdfIn)
+            create_summary(full_path, output_file, comment_name, matches_record)
 
 def read_csv(list_filename_csv):
     with open(list_filename_csv, 'r') as csv_data:
@@ -88,6 +88,7 @@ def create_output_file(input_file, pdfIn):
   return output_file
 
 def create_summary(input_file, output_file, comment_title, matches_record):
+    summary_header = f"Summary for {input_file}"
     summary = {
          "Input File": input_file
        , "Output File": output_file
@@ -95,8 +96,10 @@ def create_summary(input_file, output_file, comment_title, matches_record):
        , "Matching Instances": "\n" + "\n".join("{}: {}".format(word, count) for word, count in matches_record.items())
     }
     # Export Process Summary
-    with open('test_files/summary.txt', 'w') as summary_txt:
+    with open('input_folder/summary.txt', 'a') as summary_txt:
+        summary_txt.write(f"\n{summary_header}\n")
         summary_txt.write("\n".join("{}: {}".format(i, j) for i, j in summary.items()))
+        summary_txt.write("\n\n")
 
 if __name__ == '__main__':
-    comment_pdf(input_file=config["source file"], list_filename_csv=config["keywords list"])
+    comment_pdf(input_folder=config["source_folder"], list_filename_csv=config["keywords_list"])
