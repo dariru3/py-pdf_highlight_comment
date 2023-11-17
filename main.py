@@ -48,6 +48,7 @@ def comment_pdf(input_folder:str, list_filename_csv:str, pages:list=None, highli
             if highlight_output:
                 output_file = create_output_file(full_path, pdfIn)
             else:
+                comment_name = "none"
                 pdfIn.close()
             
             create_summary(input_file, output_file, comment_name, matches_record)
