@@ -4,7 +4,7 @@ import csv
 import os
 from config import config
 
-def comment_pdf(input_folder:str, list_filename_csv:str, pages:list=None):
+def comment_pdf(input_folder:str, list_filename_csv:str, pages:list=None, highlight_output: bool=True):
     comment_name = "Highlighter"
     search_list = read_csv(list_filename_csv)
     
@@ -29,13 +29,18 @@ def comment_pdf(input_folder:str, list_filename_csv:str, pages:list=None):
                     matched_values = page.search_for(word)
                     if matched_values:
                         update_matches_record(matches_record, word, matched_values)
-                        # print("color:", color)
-                        # highlight_text(matched_values, page, color, comment_name, comment)
+                        if highlight_output:
+                            highlight_text(matched_values, page, color, comment_name, comment)
             # UX
             # sys.stdout.write("Done!")
             
             # Save to output files
-            output_file = "none" # create_output_file(full_path, pdfIn)
+            output_file = "none"
+            if highlight_output:
+                output_file = create_output_file(full_path, pdfIn)
+            else:
+                pdfIn.close()
+            
             create_summary(full_path, output_file, comment_name, matches_record)
             print(f"Scan complete: {input_file}")
 
@@ -102,4 +107,4 @@ def create_summary(input_file, output_file, comment_title, matches_record):
         summary_txt.write("\n\n")
 
 if __name__ == '__main__':
-    comment_pdf(input_folder=config["source_folder"], list_filename_csv=config["keywords_list"])
+    comment_pdf(input_folder=config["source_folder"], list_filename_csv=config["keywords_list"], highlight_output=False)
