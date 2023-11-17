@@ -1,41 +1,48 @@
 import fitz
 import sys
 import csv
+import os
 from config import config
 
-def comment_pdf(input_file:str, list_filename_csv:str, pages:list=None):
+def comment_pdf(input_folder:str, list_filename_csv:str, pages:list=None, highlight_output: bool=True):
     comment_name = "Highlighter"
     search_list = read_csv(list_filename_csv)
-    # create matches dictionary for output summary
-    matches_record = create_matches_record(search_list)
-
-    # open pdf
-    pdfIn = fitz.open(input_file)
-    # Iterate throughout pdf pages
-    for pg,page in enumerate(pdfIn):
-        pageID = pg+1
-        # UX
-        sys.stdout.write(f"\rScanning page {pageID}...")
-        sys.stdout.flush()
-
-        # If required to look in specific pages
-        if pages and pageID not in pages:
-            continue
-
-        # Use the search_for function to find text
-        for search_settings in search_list:
-            word, comment, color = search_settings
-            matched_values = page.search_for(word)
-            if matched_values:
-                update_matches_record(matches_record, word, matched_values)
-                print("color:", color)
-                highlight_text(matched_values, page, color, comment_name, comment)
-    # UX
-    sys.stdout.write("Done!")
     
-    # Save to output files
-    output_file = create_output_file(input_file, pdfIn)
-    create_summary(input_file, output_file, comment_name, matches_record)
+    for input_file in os.listdir(input_folder):
+        if input_file.endswith(".pdf"):
+            full_path = os.path.join(input_folder, input_file)
+            matches_record = create_matches_record(search_list)
+            pdfIn = fitz.open(full_path)
+            for pg,page in enumerate(pdfIn):
+                pageID = pg+1
+                # UX
+                # sys.stdout.write(f"\rScanning page {pageID}...")
+                # sys.stdout.flush()
+
+                # If required to look in specific pages
+                if pages and pageID not in pages:
+                    continue
+
+                # Use the search_for function to find text
+                for search_settings in search_list:
+                    word, comment, color = search_settings
+                    matched_values = page.search_for(word)
+                    if matched_values:
+                        update_matches_record(matches_record, word, matched_values)
+                        if highlight_output:
+                            highlight_text(matched_values, page, color, comment_name, comment)
+            # UX
+            # sys.stdout.write("Done!")
+            
+            # Save to output files
+            output_file = "none"
+            if highlight_output:
+                output_file = create_output_file(full_path, pdfIn)
+            else:
+                pdfIn.close()
+            
+            create_summary(full_path, output_file, comment_name, matches_record)
+            print(f"Scan complete: {input_file}")
 
 def read_csv(list_filename_csv):
     with open(list_filename_csv, 'r') as csv_data:
@@ -87,15 +94,17 @@ def create_output_file(input_file, pdfIn):
   return output_file
 
 def create_summary(input_file, output_file, comment_title, matches_record):
+    summary_header = f"Summary for {input_file}"
     summary = {
-         "Input File": input_file
-       , "Output File": output_file
-       , "Comment Title": comment_title
-       , "Matching Instances": "\n" + "\n".join("{}: {}".format(word, count) for word, count in matches_record.items())
+        "Output File": output_file
+        , "Comment Title": comment_title
+        , "Matching Instances": "\n" + "\n".join("{}: {}".format(word, count) for word, count in matches_record.items())
     }
     # Export Process Summary
-    with open('test_files/summary.txt', 'w') as summary_txt:
+    with open('input_folder/summary.txt', 'a') as summary_txt:
+        summary_txt.write(f"{summary_header}\n")
         summary_txt.write("\n".join("{}: {}".format(i, j) for i, j in summary.items()))
+        summary_txt.write("\n\n")
 
 if __name__ == '__main__':
-    comment_pdf(input_file=config["source file"], list_filename_csv=config["keywords list"])
+    comment_pdf(input_folder=config["source_folder"], list_filename_csv=config["keywords_list"], highlight_output=False)
