@@ -109,17 +109,15 @@ def create_output_file(input_file, pdfIn):
   return output_file
 
 def create_summary(input_file, output_file, comment_title, matches_record):
-    summary_header = f"Summary for {input_file}"
-    summary = {
-        "Output File": output_file
-        , "Comment Title": comment_title
-        , "Matching Instances": "\n" + "\n".join("{}: {}".format(word, count) for word, count in matches_record.items())
-    }
-    # Export Process Summary
-    with open('input_folder/summary.txt', 'a') as summary_txt:
-        summary_txt.write(f"{summary_header}\n")
-        summary_txt.write("\n".join("{}: {}".format(i, j) for i, j in summary.items()))
-        summary_txt.write("\n\n")
+    with open('input_folder/summary.csv', 'a', newline='') as csvfile:
+        csv_writer = csv.writer(csvfile)
+        # If the file is empty, write a header
+        if csvfile.tell() == 0:
+            csv_writer.writerow(["Word", "Count", "Input File", "Output File", "Comment Title"])
+
+        for word, count in matches_record.items():
+            summary_data = [word, count, input_file, output_file, comment_title]
+            csv_writer.writerow(summary_data)
 
 def log_scanned_file(filename: str):
     with shelve.open('input_folder/scanned_files') as db:
