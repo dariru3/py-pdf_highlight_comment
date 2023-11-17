@@ -2,7 +2,7 @@
 test.py
 *.csv
 summary.txt
-test_files/
+input_folder/
 config.py
 env/
 .DS_Store

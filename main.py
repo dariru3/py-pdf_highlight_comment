@@ -1,41 +1,42 @@
 import fitz
 import sys
 import csv
+import os
 from config import config
 
-def comment_pdf(input_file:str, list_filename_csv:str, pages:list=None):
+def comment_pdf(input_folder:str, list_filename_csv:str, pages:list=None):
     comment_name = "Highlighter"
     search_list = read_csv(list_filename_csv)
-    # create matches dictionary for output summary
-    matches_record = create_matches_record(search_list)
-
-    # open pdf
-    pdfIn = fitz.open(input_file)
-    # Iterate throughout pdf pages
-    for pg,page in enumerate(pdfIn):
-        pageID = pg+1
-        # UX
-        sys.stdout.write(f"\rScanning page {pageID}...")
-        sys.stdout.flush()
-
-        # If required to look in specific pages
-        if pages and pageID not in pages:
-            continue
-
-        # Use the search_for function to find text
-        for search_settings in search_list:
-            word, comment, color = search_settings
-            matched_values = page.search_for(word)
-            if matched_values:
-                update_matches_record(matches_record, word, matched_values)
-                print("color:", color)
-                highlight_text(matched_values, page, color, comment_name, comment)
-    # UX
-    sys.stdout.write("Done!")
     
-    # Save to output files
-    output_file = create_output_file(input_file, pdfIn)
-    create_summary(input_file, output_file, comment_name, matches_record)
+    for input_file in os.listdir(input_folder):
+        if input_file.endswith(".pdf"):
+            full_path = os.path.join(input_folder, input_file)
+            matches_record = create_matches_record(search_list)
+            pdfIn = fitz.open(full_path)
+            for pg,page in enumerate(pdfIn):
+                pageID = pg+1
+                # UX
+                sys.stdout.write(f"\rScanning page {pageID}...")
+                sys.stdout.flush()
+
+                # If required to look in specific pages
+                if pages and pageID not in pages:
+                    continue
+
+                # Use the search_for function to find text
+                for search_settings in search_list:
+                    word, comment, color = search_settings
+                    matched_values = page.search_for(word)
+                    if matched_values:
+                        update_matches_record(matches_record, word, matched_values)
+                        print("color:", color)
+                        highlight_text(matched_values, page, color, comment_name, comment)
+            # UX
+            sys.stdout.write("Done!")
+            
+            # Save to output files
+            output_file = create_output_file(input_file, pdfIn)
+            create_summary(input_file, output_file, comment_name, matches_record)
 
 def read_csv(list_filename_csv):
     with open(list_filename_csv, 'r') as csv_data:
