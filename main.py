@@ -22,6 +22,7 @@ def comment_pdf(input_folder:str, list_filename_csv:str, pages:list=None, highli
                 error_message = f"Error opening file {full_path}: {e}"
                 print(error_message)
                 log_error(error_message)
+                continue
             for pg,page in enumerate(pdfIn):
                 pageID = pg+1
                 # UX
