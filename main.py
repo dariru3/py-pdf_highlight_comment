@@ -4,6 +4,7 @@ import csv
 import os
 import shelve
 from config import config
+from debug_search_word import *
 
 def comment_pdf(input_folder:str, list_filename_csv:str, pages:list=None, highlight_output: bool=True, highlight_italic: bool=False):
     comment_name = "Highlighter"
@@ -26,8 +27,8 @@ def comment_pdf(input_folder:str, list_filename_csv:str, pages:list=None, highli
             for pg,page in enumerate(pdfIn):
                 pageID = pg+1
                 # UX
-                sys.stdout.write(f"\rScanning page {pageID}...")
-                sys.stdout.flush()
+                # sys.stdout.write(f"\rScanning page {pageID}...")
+                # sys.stdout.flush()
 
                 # If required to look in specific pages
                 if pages and pageID not in pages:
@@ -35,6 +36,10 @@ def comment_pdf(input_folder:str, list_filename_csv:str, pages:list=None, highli
                 
                 if highlight_italic:
                     highlight_italic_text(page)
+
+                # Debugging
+                # debug_search_word_properties(page, "Junwakei")
+                # debug_search_by_font(page, "AvenirLTStd-Light")
                 
                 # Use the search_for function to find text
                 for search_settings in search_list:
@@ -152,4 +157,4 @@ def log_error(error_message: str):
 if __name__ == '__main__':
     with shelve.open('input_folder/scanned_files') as db:
         pass
-    comment_pdf(input_folder=config["source_folder"], list_filename_csv=config["keywords_list"], highlight_output=True, highlight_italic=True)
+    comment_pdf(input_folder=config["source_folder"], list_filename_csv=config["keywords_list"], highlight_output=False, highlight_italic=False)
