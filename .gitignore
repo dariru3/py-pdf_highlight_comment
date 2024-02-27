@@ -6,3 +6,4 @@ input_folder/
 config.py
 env/
 .DS_Store
+__pycache__/
