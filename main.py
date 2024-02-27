@@ -26,8 +26,8 @@ def comment_pdf(input_folder:str, list_filename_csv:str, pages:list=None, highli
             for pg,page in enumerate(pdfIn):
                 pageID = pg+1
                 # UX
-                # sys.stdout.write(f"\rScanning page {pageID}...")
-                # sys.stdout.flush()
+                sys.stdout.write(f"\rScanning page {pageID}...")
+                sys.stdout.flush()
 
                 # If required to look in specific pages
                 if pages and pageID not in pages:
@@ -35,17 +35,18 @@ def comment_pdf(input_folder:str, list_filename_csv:str, pages:list=None, highli
 
                 # Use the search_for function to find text
                 for search_settings in search_list:
-                    word, comment, color = search_settings
+                    word, comment = search_settings[:2]
+                    color = search_settings[2] if len(search_settings) > 2 else None
+
                     matched_values = page.search_for(word)
                     if matched_values:
                         update_matches_record(matches_record, word, matched_values)
                         if highlight_output:
                             highlight_text(matched_values, page, color, comment_name, comment)
             # UX
-            # sys.stdout.write("Done!")
+            sys.stdout.write("Done!")
             
             # Save to output files
-            output_file = "none"
             if highlight_output:
                 output_file = create_output_file(full_path, pdfIn)
             else:
@@ -60,12 +61,12 @@ def read_csv(list_filename_csv):
     try:
         with open(list_filename_csv, 'r') as csv_data:
             csv_reader = csv.reader(csv_data)
-            header = next(csv_reader) # skips the first row
-            search_list = [[row[0], row[1], row[2]] for row in csv_reader]
+            next(csv_reader) # skips the first row
+            search_list = [row[:2] if len(row) == 2 else row[:3] for row in csv_reader]
         return search_list
     except Exception as e:
         print(f"Error reading CSV file {list_filename_csv}: {e}")
-        sys.exit(1) # Exit the script
+        sys.exit(1)
 
 def create_matches_record(search_list):
    return {search[0]: 0 for search in search_list}
@@ -92,10 +93,8 @@ def highlight_text(matched_values, page, color, comment_title, comment):
     for item in matched_values:
         # Highlight found text
         annot = page.add_highlight_annot(item)
-        # print("Stroke:", colors[color])
-        if color:
-            if color.lower() in colors:
-                annot.set_colors(stroke=colors[color])
+        if color and color.lower() in colors:
+            annot.set_colors(stroke=colors[color.lower()])
         # Add comment to the found match
         info = annot.info
         info["title"] = comment_title
@@ -135,4 +134,4 @@ def log_error(error_message: str):
 if __name__ == '__main__':
     with shelve.open('input_folder/scanned_files') as db:
         pass
-    comment_pdf(input_folder=config["source_folder"], list_filename_csv=config["keywords_list"], highlight_output=False)
+    comment_pdf(input_folder=config["source_folder"], list_filename_csv=config["keywords_list"], highlight_output=True)
