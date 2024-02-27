@@ -111,6 +111,7 @@ def highlight_text(matched_values, page, color, comment_title, comment):
         annot.set_info(info)
         annot.update(opacity=0.4)
 
+# Inconsistent results because of irregular font data in PDF
 def highlight_italic_text(page):
     for text_instance in page.get_text("dict")["blocks"]:
         for line in text_instance.get("lines", []):
