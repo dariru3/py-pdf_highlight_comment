@@ -5,17 +5,24 @@ import os
 import shelve
 from config import config
 
+# Difference between this file and the notebook file (.ipynb) is because of wider use case.
+# This script can also be used to scan hundreds of file, outputing a summary file that includes
+# how many times a word is found in a certain file.
+
 def comment_pdf(input_folder:str, list_filename_csv:str, pages:list=None, highlight_output: bool=True):
     comment_name = "Highlighter"
     search_list = read_csv(list_filename_csv)
+    matches_record = create_matches_record(search_list)
     
     for input_file in os.listdir(input_folder):
+        # Check if PDF has already been scanned
         if input_file.endswith(".pdf"):
+            # Check against database of scanned PDF filenames
             if is_file_scanned(input_file):
                 print(f'Already scanned: {input_file}')
                 continue
             full_path = os.path.join(input_folder, input_file)
-            matches_record = create_matches_record(search_list)
+            
             try:
                 pdfIn = fitz.open(full_path)
             except Exception as e:
@@ -23,6 +30,7 @@ def comment_pdf(input_folder:str, list_filename_csv:str, pages:list=None, highli
                 print(error_message)
                 log_error(error_message)
                 continue
+            # Matches .ipynb file <<START>>
             for pg,page in enumerate(pdfIn):
                 pageID = pg+1
                 # UX
@@ -45,6 +53,7 @@ def comment_pdf(input_folder:str, list_filename_csv:str, pages:list=None, highli
                             highlight_text(matched_values, page, color, comment_name, comment)
             # UX
             sys.stdout.write("Done!")
+            # Matches .ipynb file <<END>>
             
             # Save to output files
             if highlight_output:
@@ -54,6 +63,7 @@ def comment_pdf(input_folder:str, list_filename_csv:str, pages:list=None, highli
                 pdfIn.close()
             
             create_summary(input_file, output_file, comment_name, matches_record)
+            # Add PDF filename to database of scanned files
             log_scanned_file(input_file)
             print(f"Scan complete: {input_file}")
 
