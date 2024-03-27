@@ -6,7 +6,7 @@ import shelve
 from config import config
 
 # Difference between this file and the notebook file (.ipynb) is because of wider use case.
-# This script can also be used to scan hundreds of file, outputing a summary file that includes
+# This script can also be used to scan hundreds of files, outputing a summary file that includes
 # how many times a word is found in a certain file.
 
 def comment_pdf(input_folder:str, list_filename_csv:str, pages:list=None, highlight_output: bool=True):
@@ -60,6 +60,7 @@ def comment_pdf(input_folder:str, list_filename_csv:str, pages:list=None, highli
                 output_file = create_output_file(full_path, pdfIn)
             else:
                 comment_name = "none"
+                output_file = "none"
                 pdfIn.close()
             
             create_summary(input_file, output_file, comment_name, matches_record)
@@ -144,4 +145,4 @@ def log_error(error_message: str):
 if __name__ == '__main__':
     with shelve.open('input_folder/scanned_files') as db:
         pass
-    comment_pdf(input_folder=config["source_folder"], list_filename_csv=config["keywords_list"], highlight_output=True)
+    comment_pdf(input_folder=config["source_folder"], list_filename_csv=config["keywords_list"], highlight_output=False)
