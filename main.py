@@ -145,4 +145,4 @@ def log_error(error_message: str):
 if __name__ == '__main__':
     with shelve.open('input_folder/scanned_files') as db:
         pass
-    comment_pdf(input_folder=config["source_folder"], list_filename_csv=config["keywords_list"], highlight_output=False)
+    comment_pdf(input_folder=config["source_folder"], list_filename_csv=config["keywords_list"], highlight_output=True)
